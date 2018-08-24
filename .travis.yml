@@ -1,0 +1,20 @@
+sudo: required
+services:
+- docker
+env:
+  global:
+  - DOCKER_USERNAME=gjacquenot
+  - secure: HSh0y1n60VVzxhJYDzQqy0fsB48vuZpXJ3NdKZEMNx0Mn3rACQrVk9wZKCB7nO5qLmzHaNsRQ/CpGQJLqKhRj/PCjUCMSHYCICkdQ4u+jAWsWYM32gFJyvAs+VCynehiREJnrSP3wmkRPR1wM8htN317bRP7FuezenTkdcQrj9lqv+1IjIOBiagLmvve8mgHaATwSc8v2TpRgtWmuQ6I2WIwQdogJ0dsomHNt+frsXAMaLRpZTdoThWaoZaXZdc5ZEowDW6bIyukIWYt+vAAm9RBICk0nuGnIUsgopHLuySE5JxLVLIsxy1J20zSFmDB3NUPGRoB1X1kOHaSyiE2lj/iHsVGa0wpJ55hZ4MBK/JU4JrJPazHlq9wNi/0VE91+oA26ftf7q+WYlI8RmpvEh4weMMBaYs1Sir5dQlzPfxWsuoJxCO9v5wjZKlgmNnQ/LBW3VK0XEsCzr4nrvLC6AIc5Y52FmGwzvim5n7WM9nyNThUUDM8mRm+uxntd7Ubnw15he3BnbHxaxnLMk9atOHpgD9C3djviIa3ysiSoREbPM5MVFcJsfPx2mX2pEs8s1bLSw9+b0XBFv+lCRuSn1tADuX2UB8QgqT31ajIt9nOpJFuQBOh7fg74S+7BVdxJLjuQEz3MQQxAsd14wcT1dpuQ5HuMLqKgBCAxMr7dUA=
+before_install:
+- echo "Before install"
+before_script:
+- docker pull gjacquenot/ssc_build_debian9_gcc8 || true
+script:
+- docker build --pull --cache-from gjacquenot/ssc_build_debian9_gcc8 --tag gjacquenot/ssc_build_debian9_gcc8 .
+after_script:
+- docker images
+after_success:
+- if [[ "$TRAVIS_BRANCH" == "master" ]]; then docker login -u $DOCKER_USERNAME -p
+  $DOCKER_PASSWORD ; docker push gjacquenot/ssc_build_debian9_gcc8 ; fi
+notifications:
+  email: true
