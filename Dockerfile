@@ -3,15 +3,12 @@ FROM gcc:8
 RUN set -x && \
     apt-get update -yq && \
     apt-get install --yes --no-install-recommends \
-        ca-certificates \
-        curl \
-        git \
         ninja-build \
         unzip \
-        wget \
+        libblas-common \
+        libgfortran3 \
         libblas3 \
         liblapack3 \
-        libbz2-dev \
         && \
     apt-get clean && \
     rm -rf /tmp/* /var/tmp/* && \
